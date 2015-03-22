@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>巷议 - ShunEncode</title>
+<script src="ShunEncode.js"></script>
+<style>
+  body {
+    font-size:1.2em;
+    padding:0;
+    margin:0;
+  }
+  h1 {
+    color:darkgreen;
+    font-size:2em;
+    margin:6px auto 10px auto;
+    padding:2px;
+  }
+  label {
+    cursor:pointer;
+  }
+  p {
+    line-height:200%;
+    margin:0;
+    padding:0;
+  }
+  table {
+    width:100%;
+    height:600px;
+    min-height:300px;
+    height:100vh;
+    margin:0;
+    padding:0;
+  }
+  table td {
+    padding:10px;
+    vertical-align:top;
+  }
+  p.fn button {
+    width:auto;
+    margin:6px 20px;
+    color:white;
+    font-size:1em;
+    padding:6px 14px;
+    border-radius:10px;
+    background-color:darkgreen;
+    border-color:green;
+    border-width:4px;
+  }
+  textarea {
+    font-size:1em;
+    display:block;
+    width:99%;
+    min-height:200px;
+    height:64vh;
+  }
+  #sizeNotice {
+    position:absolute;
+  }
+  #sizeNotice.fat {
+    color:red;
+  }
+  #sizeNotice.slim {
+    color:green;
+  }
+  #giveExample {
+    border-radius:6px;
+    color:Indigo;
+    cursor:pointer;
+  }
+</style>
+<style>#forkongithub a{background:darkgreen;color:#EEE;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:green;color:#FFF;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#DDD;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:600px){#forkongithub{position:absolute;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.6);}}</style>
+</head>
+<body>
+<span id="forkongithub"><a target="Github" href="https://github.com/CJex/ShunEncode">Fork me on GitHub</a></span>
+
+<table border="4" bordercolor="darkgreen">
+
+  <tr>
+    <td style="text-align:center;vertical-align:middle;" colspan="2">
+      <h1>ShunEncode - 巷议</h1>
+      <p class="fn">
+        <button id="decodeBtn">⟸ 解码</button>
+        <button id="encodeBtn">编码 ⟹</button>
+      </p>
+      <p>
+        <label>
+          <input type="checkbox" checked="checked" id="checkZEnergy" />
+          两倍超级正能量火力全开！蛤～妹～蛤～没～波哦<a style="text-decoration:none;" href="https://zh.wikipedia.org/wiki/%E9%BE%9F%E6%B4%BE%E6%B0%94%E5%8A%9F" target="_blank">！！！</a>
+        </label>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <p>原来的文字：（<button id="giveExample">示例？</button>）</p>
+      <p><textarea id="sourceText"></textarea></p>
+    </td>
+    <td>
+      <p>编码后的文字：<span id="sizeNotice"></span></p>
+      <p><textarea id="targetText"></textarea></p>
+    </td>
+  </tr>
+</table>
+<script>
+var sample="There are of course those who do not want us to speak. I suspect even now, orders are being shouted into telephones, and men with guns will soon be on their way. Why? Because while the truncheon may be used in lieu of conversation, words will always retain their power. Words offer the means to meaning, and for those who will listen, the enunciation of truth. And the truth is, there is something terribly wrong with this country, isn't there? Cruelty and injustice, intolerance and oppression. And where once you had the freedom to object, to think and speak as you saw fit, you now have censors and systems of surveillance coercing your conformity and soliciting your submission. How did this happen? Who's to blame? Well certainly there are those more responsible than others, and they will be held accountable, but again truth be told, if you're looking for the guilty, you need only look into a mirror. I know why you did it. I know you were afraid. Who wouldn't be? War, terror, disease. There were a myriad of problems which conspired to corrupt your reason and rob you of your common sense. Fear got the best of you, and in your panic you turned to the now high chancellor, Adam Sutler. He promised you order, he promised you peace, and all he demanded in return was your silent, obedient consent.";
+function $(id) {return document.getElementById(id)}
+function showChar(c) {return c.charCodeAt(0).toString(16)+":"+c};
+var _ = ShunEncode;
+var trim=_.trim;
+
+var decodeBtn=$('decodeBtn'),
+    encodeBtn=$('encodeBtn'),
+    sourceText=$('sourceText'),
+    targetText=$('targetText'),
+    checkZEnergy=$('checkZEnergy'),
+    sizeNotice=$('sizeNotice'),
+    giveExample=$('giveExample');
+
+giveExample.onclick=function () {
+  sourceText.value=sample;
+  encodeBtn.onclick();
+};
+
+encodeBtn.onclick=function () {
+  var s=sourceText.value=trim(sourceText.value);
+  var n=s.length;
+  if (!n) {
+    alert("请输入要编码的内容！");
+    sourceText.focus();
+    return;
+  }
+  targetText.value=s=ShunEncode.encode(s,!checkZEnergy.checked);
+  console.log("编码前："+n);
+  console.log("编码后："+s.length);
+  var delta=s.length-n,percent=(Math.abs(delta/n)*100).toFixed(2)+"%";
+  if (delta >0) {
+    sizeNotice.className="fat";
+    sizeNotice.innerHTML="（增加了"+delta+"个字、约"+percent+"）";
+  } else {
+    sizeNotice.className="slim";
+    sizeNotice.innerHTML="（节省了"+(-delta)+"个字、约"+percent+"）";
+  }
+};
+decodeBtn.onclick=function  () {
+  var s=targetText.value=trim(targetText.value);
+  if (!s.length) {
+    alert("请输入要解码的内容！");
+    targetText.focus();
+    return;
+  }
+  var s=ShunEncode.decode(s);
+  if (s===false) {
+    return alert('解码失败！\n您输入的格式可能不正确。\n请确保复制完整。');
+  }
+  sourceText.value=s;
+};
+
+
+
+</script>
+</body>
+</html>

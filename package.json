@@ -1,0 +1,24 @@
+{
+  "name": "shun-encode",
+  "version": "0.0.3",
+  "description": "Encode text with positive energy! 🐶",
+  "main": "ShunEncode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CJex/ShunEncode.git"
+  },
+  "keywords": [
+    "encode",
+    "ShunEncode",
+    "GFW",
+    "censorship",
+    "404"
+  ],
+  "dependencies":{
+    "amdefine":"~1.0.0"
+  },
+  "author": {
+    "name": "Jex"
+  },
+  "license": "MIT"
+}
